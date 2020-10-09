@@ -8,6 +8,8 @@ export const Buttons = {
   done: "Done",
   apply_es: "Aplicar",
   done_es: "Aceptar",
+  close: "Close",
+  close_es: "Cerrar",
 };
 
 export const Inputs = {

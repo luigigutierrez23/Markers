@@ -1,7 +1,6 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Dimensions, Button } from "react-native";
-import { Map, Modal, Panel, Input } from "./components/index.js";
+import { StyleSheet, View, Button } from "react-native";
+import { Map, Modal, Panel, Input, List } from "./components/index.js";
 import { VisibilityFilter, Buttons, Inputs, Titles } from "./shared/Literals";
 
 export default function App() {
@@ -12,6 +11,9 @@ export default function App() {
     VisibilityFilter.newDot
   );
   const [visibility, setVisibility] = useState(false);
+  const [dotsFilter, setDotsFilter] = useState(true);
+
+  const togglePointsFilter = () => setDotsFilter(!dotsFilter);
 
   const handLongPress = ({ nativeEvent }) => {
     setVisibilityFilter(VisibilityFilter.newDot);
@@ -31,38 +33,41 @@ export default function App() {
   };
 
   const handleList = () => {
-    console.log("entra");
-    setVisibilityFilter(VisibilityFilter.newDot);
+    setVisibilityFilter(VisibilityFilter.allDot);
     setVisibility(true);
   };
 
   return (
     <View style={styles.container}>
-      <Map onLongPress={handLongPress} />
+      <Map onLongPress={handLongPress} dots={dots} dotsFilter={dotsFilter} />
       <Modal visibility={visibility}>
-        {visibilityFilter === VisibilityFilter.newDot ? (
-          <>
+        {visibilityFilter == VisibilityFilter.newDot ? (
+          <View style={styles.form}>
             <Input
               title={Inputs.name}
               placeholder={Inputs.name}
               onChangeText={handleChangeText}
             />
             <Button title={Buttons.apply} onPress={handleSubmit} />
-          </>
+          </View>
         ) : (
-          <Text>"lalala"</Text>
+          <List dots={dots} closeModal={() => setVisibility(false)} />
         )}
       </Modal>
       <Panel
         onPressLeft={handleList}
         textLeft={Titles.list}
         textRight={Titles.show_hide}
+        togglePointsFilter={togglePointsFilter}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  form: {
+    padding: 15,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
